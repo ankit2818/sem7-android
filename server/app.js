@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 
 const user = require("./routes/user");
-const profile = require("./routes/project");
+const project = require("./routes/project");
 
 const app = express();
 
@@ -25,6 +25,7 @@ mongoose
 
 /** Use routes */
 app.use("/user", user);
+app.use("/project", project);
 
 const port = process.env.PORT || 3000;
 

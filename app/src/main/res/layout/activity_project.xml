@@ -7,49 +7,22 @@
     tools:context=".ProjectActivity">
 
     <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
 
         <TextView
-            android:id="@+id/projectId1"
-            android:layout_width="wrap_content"
+            android:id="@+id/titleProjectName"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginBottom="100dp"
-            android:padding="20dp" />
+            android:padding="6dp"
+            android:text="Title Project Name"
+            android:textAlignment="center"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="24sp" />
 
-        <TextView
-            android:id="@+id/projectId2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginBottom="100dp"
-            android:padding="20dp" />
-
-        <TextView
-            android:id="@+id/projectId3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginBottom="100dp"
-            android:padding="20dp" />
-
-        <TextView
-            android:id="@+id/projectId4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginBottom="100dp"
-            android:padding="20dp" />
-
-        <TextView
-            android:id="@+id/projectId5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginBottom="100dp"
-            android:padding="20dp" />
+        <include layout="@layout/members_fragment" />
+        <include layout="@layout/task_fragment" />
 
     </LinearLayout>
 

@@ -15,6 +15,30 @@ public class Team {
     this.dateCreated = dateCreated;
   }
 
+  public void setProjectId(String projectId) {
+    this.projectId = projectId;
+  }
+
+  public void setImageURL(String[] imageURL) {
+    this.imageURL = imageURL;
+  }
+
+  public void setTeamMembers(String[] teamMembers) {
+    this.teamMembers = teamMembers;
+  }
+
+  public void setProjectName(String projectName) {
+    this.projectName = projectName;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
+  }
+
+  public void setDateCreated(String dateCreated) {
+    this.dateCreated = dateCreated;
+  }
+
   public String getProjectId() {
     return projectId;
   }

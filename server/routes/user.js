@@ -1,6 +1,9 @@
 const express = require("express");
 const bcrypt = require("bcryptjs");
+const isEmpty = require("../validation/is-empty");
 const router = express.Router();
+
+let regexEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 /** Load Model */
 const User = require("../models/User");
@@ -18,21 +21,24 @@ router.post("/register", (req, res) => {
     email: ""
   };
   if (
-    req.body.name == "" ||
-    req.body.email == "" ||
-    req.body.password == "" ||
-    req.body.confirmPassword == ""
+    isEmpty(req.body.name) ||
+    isEmpty(req.body.email) ||
+    isEmpty(req.body.password) ||
+    isEmpty(req.body.confirmPassword)
   ) {
-    if (req.body.name == "") {
+    if (isEmpty(req.body.name)) {
       errors.name = "Name is required";
     }
-    if (req.body.email == "") {
+    if (isEmpty(req.body.email)) {
       errors.email = "Email is required";
     }
-    if (req.body.password == "") {
+    if (!regexEmail.test(req.body.email)) {
+      errors.email = "Invalid Email Address";
+    }
+    if (isEmpty(req.body.password)) {
       errors.password = "Password is required";
     }
-    if (req.body.confirmPassword == "") {
+    if (isEmpty(req.body.confirmPassword)) {
       errors.confirmPassword = "Confirm Password is required";
     }
     return res.json(errors);
@@ -75,11 +81,15 @@ router.post("/login", (req, res) => {
     loggedIn: false
   };
 
-  if (req.body.email == "" || req.body.password == "") {
-    if (req.body.email == "") {
+  if (isEmpty(req.body.email) || isEmpty(req.body.password)) {
+    if (isEmpty(req.body.email)) {
       errors.email = "Email is required";
+    } else {
+      if (!regexEmail.match(req.body.email)) {
+        errors.email = "Invalid Email Address";
+      }
     }
-    if (req.body.password == "") {
+    if (isEmpty(req.body.password)) {
       errors.password = "Password is required";
     }
     return res.json(errors);
