@@ -32,9 +32,9 @@ router.post("/register", (req, res) => {
     if (isEmpty(req.body.email)) {
       errors.email = "Email is required";
     }
-    if (!regexEmail.test(req.body.email)) {
+    /**if (!regexEmail.test(req.body.email)) {
       errors.email = "Invalid Email Address";
-    }
+    }*/
     if (isEmpty(req.body.password)) {
       errors.password = "Password is required";
     }
@@ -84,11 +84,11 @@ router.post("/login", (req, res) => {
   if (isEmpty(req.body.email) || isEmpty(req.body.password)) {
     if (isEmpty(req.body.email)) {
       errors.email = "Email is required";
-    } else {
+    } /**else {
       if (!regexEmail.match(req.body.email)) {
         errors.email = "Invalid Email Address";
       }
-    }
+    }*/
     if (isEmpty(req.body.password)) {
       errors.password = "Password is required";
     }

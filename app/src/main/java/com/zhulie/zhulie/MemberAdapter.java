@@ -36,11 +36,11 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.MemberView
 
   @Override
   public void onBindViewHolder(@NonNull MemberViewHolder memberViewHolder, int i) {
-    CircleImageView imageView = memberViewHolder.imageUri;
-    TextView name = memberViewHolder.name;
+      CircleImageView imageView = memberViewHolder.imageUri;
+      TextView name = memberViewHolder.name;
 
-    name.setText(memberArrayList.get(i).getName());
-    Glide.with(context).load(Uri.parse(memberArrayList.get(i).getImageUri())).centerCrop().placeholder(R.drawable.user).error(R.drawable.error).into(imageView);
+      name.setText(memberArrayList.get(i).getName());
+      Glide.with(context).load(Uri.parse(memberArrayList.get(i).getImageUri())).centerCrop().placeholder(R.drawable.user).error(R.drawable.error).into(imageView);
   }
 
   @Override

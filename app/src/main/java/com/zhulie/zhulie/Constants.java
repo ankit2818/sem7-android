@@ -2,7 +2,7 @@ package com.zhulie.zhulie;
 
 public class Constants {
 
-  private static String IP = "192.168.43.215:3000";
+  private static String IP = "10.0.1.230:3000";
   static String BASEURL = "http://"+IP;
 
   static String REGISTERURL = BASEURL+"/user/register"; // http://IP:3000/user/register

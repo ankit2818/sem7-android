@@ -38,12 +38,13 @@ public class TeamAdapter extends RecyclerView.Adapter<TeamAdapter.TeamViewHolder
 
   @Override
   public void onBindViewHolder(@NonNull TeamViewHolder teamViewHolder, int i) {
+    final int count = i;
     CircleImageView[] userImages = {teamViewHolder.userImage1, teamViewHolder.userImage2, teamViewHolder.userImage3, teamViewHolder.userImage4};
     TextView[] teamMembers = {teamViewHolder.userName1, teamViewHolder.userName2, teamViewHolder.userName3, teamViewHolder.userName4};
 
     final TextView projectName = teamViewHolder.projectName;
     TextView dateCreated = teamViewHolder.dateCreated;
-    TextView description = teamViewHolder.description;
+    final TextView description = teamViewHolder.description;
 
     final Button viewButton = teamViewHolder.viewButton;
     final String projectId = teamList.get(i).getProjectId();
@@ -55,8 +56,15 @@ public class TeamAdapter extends RecyclerView.Adapter<TeamAdapter.TeamViewHolder
       @Override
       public void onClick(View view) {
         Toast.makeText(context, projectName.getText(), Toast.LENGTH_SHORT).show();
+        /** Start Project Intent and pass the data */
         Intent projectIntent = new Intent(viewButton.getContext(), ProjectActivity.class);
         projectIntent.putExtra("projectId", projectId);
+        projectIntent.putExtra("projectName", projectName.getText());
+        projectIntent.putExtra("projectDescription", description.getText());
+        projectIntent.putExtra("user1ImageUri", teamList.get(count).getImageURL()[0]);
+        projectIntent.putExtra("user2ImageUri", teamList.get(count).getImageURL()[1]);
+        projectIntent.putExtra("user3ImageUri", teamList.get(count).getImageURL()[2]);
+        projectIntent.putExtra("user4ImageUri", teamList.get(count).getImageURL()[3]);
         viewButton.getContext().startActivity(projectIntent);
       }
     });
