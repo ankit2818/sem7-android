@@ -78,6 +78,8 @@ router.post("/login", (req, res) => {
   const response = {
     email: "",
     token: "",
+    name: "",
+    imageUri: "",
     loggedIn: false
   };
 
@@ -107,6 +109,8 @@ router.post("/login", (req, res) => {
     if (user.password == password) {
       response.loggedIn = true;
       response.email = user.email;
+      response.name = user.name;
+      response.imageUri = "https://loremflickr.com/200/200"; // Send user ka image ka URL
       response.token = "testToken";
       return res.json(response);
     } else {

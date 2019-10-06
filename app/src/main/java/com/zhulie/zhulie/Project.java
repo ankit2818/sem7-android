@@ -1,29 +1,36 @@
 package com.zhulie.zhulie;
 
-public class Team {
-  private String projectId;
-  private String[] imageURL;
-  private String[] teamMembers;
-  private String projectName, description, dateCreated;
+import java.util.ArrayList;
 
-  public Team(String projectId, String[] imageURL, String[] teamMembers, String projectName, String description, String dateCreated) {
+public class Project {
+  private String projectId;
+  private ArrayList<String> imageURL;
+  private ArrayList<String> teamMembers;
+  private String projectName;
+  private String description;
+  private String dateCreated;
+
+  private String dateTill;
+
+  public Project(String projectId, ArrayList<String> imageURL, ArrayList<String> teamMembers, String projectName, String description, String dateCreated, String dateTill) {
     this.projectId = projectId;
     this.imageURL = imageURL;
     this.teamMembers = teamMembers;
     this.projectName = projectName;
     this.description = description;
     this.dateCreated = dateCreated;
+    this.dateTill = dateTill;
   }
 
   public void setProjectId(String projectId) {
     this.projectId = projectId;
   }
 
-  public void setImageURL(String[] imageURL) {
+  public void setImageURL(ArrayList<String> imageURL) {
     this.imageURL = imageURL;
   }
 
-  public void setTeamMembers(String[] teamMembers) {
+  public void setTeamMembers(ArrayList<String> teamMembers) {
     this.teamMembers = teamMembers;
   }
 
@@ -39,15 +46,24 @@ public class Team {
     this.dateCreated = dateCreated;
   }
 
+  public void setDateTill(String dateTill) {
+    this.dateTill = dateTill;
+  }
+
+
+  public String getDateTill() {
+    return dateTill;
+  }
+
   public String getProjectId() {
     return projectId;
   }
 
-  public String[] getImageURL() {
+  public ArrayList<String> getImageURL() {
     return imageURL;
   }
 
-  public String[] getTeamMembers() {
+  public ArrayList<String> getTeamMembers() {
     return teamMembers;
   }
 

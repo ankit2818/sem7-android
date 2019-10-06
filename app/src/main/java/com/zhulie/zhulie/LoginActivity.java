@@ -90,14 +90,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     }
                     String token = response.getString("token");
                     String email = response.getString("email");
+                    String name = response.getString("name");
+                    String imageUri = response.getString("imageUri");
+
                     Intent mainIntent = new Intent(LoginActivity.this, MainActivity.class);
-                    mainIntent.putExtra("token", token);
-                    mainIntent.putExtra("email", email);
                     /** Save to SharedPreference */
                     SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("zhulie", 0);
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putBoolean("loggedIn", response.getBoolean("loggedIn"));
                     editor.putString("email", email);
+                    editor.putString("name", name);
+                    editor.putString("imageUri", imageUri);
                     editor.putString("token", token);
                     editor.apply();
                     startActivity(mainIntent);

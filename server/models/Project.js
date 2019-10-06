@@ -18,15 +18,15 @@ const ProjectSchema = new Schema({
   description: {
     type: String,
     required: true
-  }
-  // members: [
-  //   {
-  //     member: {
-  //       type: Schema.Types.ObjectId,
-  //       ref: "users"
-  //     }
-  //   }
-  // ]
+  },
+  members: [
+    {
+      email: {
+        type: String,
+        required: true
+      }
+    }
+  ]
 });
 
 module.exports = Project = mongoose.model("projects", ProjectSchema);

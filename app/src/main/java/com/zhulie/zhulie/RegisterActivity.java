@@ -110,7 +110,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                       confirmPasswordError.setVisibility(View.GONE);
                     }
                     Intent loginIntent = new Intent(RegisterActivity.this, LoginActivity.class);
-                    loginIntent.putExtra("email", response.getString("email"));
                     startActivity(loginIntent);
                   } else {
                     Log.d("res", String.valueOf(response));

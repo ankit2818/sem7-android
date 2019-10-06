@@ -18,13 +18,13 @@ import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class TeamAdapter extends RecyclerView.Adapter<TeamAdapter.TeamViewHolder> {
+public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.TeamViewHolder> {
   private Context context;
-  private ArrayList<Team> teamList;
+  private ArrayList<Project> projectList;
 
-  public TeamAdapter(Context context, ArrayList<Team> teamList) {
+  public ProjectAdapter(Context context, ArrayList<Project> projectList) {
     this.context = context;
-    this.teamList = teamList;
+    this.projectList = projectList;
   }
 
   @NonNull
@@ -44,14 +44,16 @@ public class TeamAdapter extends RecyclerView.Adapter<TeamAdapter.TeamViewHolder
 
     final TextView projectName = teamViewHolder.projectName;
     TextView dateCreated = teamViewHolder.dateCreated;
+    TextView dateTill = teamViewHolder.dateTill;
     final TextView description = teamViewHolder.description;
 
     final Button viewButton = teamViewHolder.viewButton;
-    final String projectId = teamList.get(i).getProjectId();
+    final String projectId = projectList.get(i).getProjectId();
 
-    projectName.setText(teamList.get(i).getProjectName());
-    dateCreated.setText(teamList.get(i).getDateCreated());
-    description.setText(teamList.get(i).getDescription());
+    projectName.setText(projectList.get(i).getProjectName());
+    dateCreated.setText(projectList.get(i).getDateCreated());
+    dateTill.setText(projectList.get(i).getDateTill());
+    description.setText(projectList.get(i).getDescription());
     viewButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
@@ -61,16 +63,16 @@ public class TeamAdapter extends RecyclerView.Adapter<TeamAdapter.TeamViewHolder
         projectIntent.putExtra("projectId", projectId);
         projectIntent.putExtra("projectName", projectName.getText());
         projectIntent.putExtra("projectDescription", description.getText());
-        projectIntent.putExtra("user1ImageUri", teamList.get(count).getImageURL()[0]);
-        projectIntent.putExtra("user2ImageUri", teamList.get(count).getImageURL()[1]);
-        projectIntent.putExtra("user3ImageUri", teamList.get(count).getImageURL()[2]);
-        projectIntent.putExtra("user4ImageUri", teamList.get(count).getImageURL()[3]);
+        projectIntent.putExtra("user1ImageUri", projectList.get(count).getImageURL().get(0));
+        projectIntent.putExtra("user2ImageUri", projectList.get(count).getImageURL().get(1));
+        projectIntent.putExtra("user3ImageUri", projectList.get(count).getImageURL().get(2));
+        projectIntent.putExtra("user4ImageUri", projectList.get(count).getImageURL().get(3));
         viewButton.getContext().startActivity(projectIntent);
       }
     });
     for (int j = 0; j < userImages.length; j++) {
-      teamMembers[j].setText(teamList.get(i).getTeamMembers()[j]);
-      Glide.with(context).load(Uri.parse(teamList.get(i).getImageURL()[j])).centerCrop().placeholder(R.drawable.user).error(R.drawable.error).into(userImages[j]);
+      teamMembers[j].setText(projectList.get(i).getTeamMembers().get(j));
+      Glide.with(context).load(Uri.parse(projectList.get(i).getImageURL().get(j))).centerCrop().placeholder(R.drawable.user).error(R.drawable.error).into(userImages[j]);
     }
 
 
@@ -78,13 +80,13 @@ public class TeamAdapter extends RecyclerView.Adapter<TeamAdapter.TeamViewHolder
 
   @Override
   public int getItemCount() {
-    return teamList.size();
+    return projectList.size();
   }
 
   public class TeamViewHolder extends RecyclerView.ViewHolder {
 
     CircleImageView userImage1, userImage2, userImage3, userImage4;
-    TextView projectName, dateCreated, description, userName1, userName2, userName3, userName4;
+    TextView projectName, dateCreated, dateTill, description, userName1, userName2, userName3, userName4;
     Button viewButton;
 
     public TeamViewHolder(@NonNull View itemView) {
@@ -102,6 +104,7 @@ public class TeamAdapter extends RecyclerView.Adapter<TeamAdapter.TeamViewHolder
 
       projectName = itemView.findViewById(R.id.projectName);
       dateCreated = itemView.findViewById(R.id.dateCreated);
+      dateTill = itemView.findViewById(R.id.dateTill);
       description = itemView.findViewById(R.id.description);
 
       viewButton = itemView.findViewById(R.id.viewButton);

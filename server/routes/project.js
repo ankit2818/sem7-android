@@ -23,8 +23,6 @@ router.post("/create", (req, res) => {
     response.membersError = "Add atleast 1 Member";
   }
 
-  console.log(req.body);
-
   const newProject = new Project({
     name: req.body.projectName,
     createdBy: "testName",
@@ -36,10 +34,11 @@ router.post("/create", (req, res) => {
     .save()
     .then(project => {
       response.success = true;
+      console.log(response.success);
       return res.json(response);
     })
     .catch(err => {
-      response.success = true;
+      response.success = false;
       return res.json(response);
     });
 });
