@@ -1,18 +1,20 @@
 package com.zhulie.zhulie;
 
-import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -40,10 +42,10 @@ import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-import static com.zhulie.zhulie.Constants.GETPROJECT;
+import static com.zhulie.zhulie.Constants.ADDTASK;
 import static com.zhulie.zhulie.Constants.GETTASK;
 
-public class ProjectActivity extends AppCompatActivity {
+public class ProjectActivity extends AppCompatActivity implements View.OnClickListener {
 
   private CircleImageView user1, user2, user3, user4;
   private TextView projectName, descriptionProject;
@@ -53,9 +55,11 @@ public class ProjectActivity extends AppCompatActivity {
   private SharedPreferences sharedPreferences;
   private ProgressBar progressBar;
   private Button retryTaskButton;
-  private LinearLayout taskFailed;
+  private LinearLayout taskFailed, noProjectTask;
   private TaskAdapter taskAdapter;
   private String projectId;
+  private EditText alertTaskName, alertTaskDescription, alertTaskAssign, alertTaskFromDate, alertTaskToDate, alertTaskPriority;
+  private String alerttaskname, alerttaskdescription, alerttaskassign, alerttaskfromdate, alerttasktodate, alerttaskpriority;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +86,7 @@ public class ProjectActivity extends AppCompatActivity {
     retryTaskButton = findViewById(R.id.retryTaskButton);
     progressBar = findViewById(R.id.taskProgressbar);
     taskFailed = findViewById(R.id.taskFailed);
+    noProjectTask = findViewById(R.id.noProjectTask);
 
     projectName.setText(name);
     descriptionProject.setText(desc);
@@ -94,14 +99,11 @@ public class ProjectActivity extends AppCompatActivity {
 
     /** Add data to TaskList */
     taskArrayList = new ArrayList<>();
-//    for (int k = 0; k < 50 ; k++) {
-//      taskArrayList.add(new Task("Task "+k, "b scahsc nm asjc h uiukvju kg oeighjjgr  jemfn mcnxv jn nfv", "10-20-5201", "12-54-5214", "High", "https://loremflickr.com/200/200"));
-//    }
 
-    taskAdapter = new TaskAdapter(getApplicationContext(), taskArrayList);
-    tasksList.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+    taskAdapter = new TaskAdapter(this, taskArrayList);
+    tasksList.setLayoutManager(new LinearLayoutManager(this));
     tasksList.setAdapter(taskAdapter);
-    addTasks(getApplicationContext());
+    addTasks(this);
 
     tasksList.addOnScrollListener(new RecyclerView.OnScrollListener() {
       @Override
@@ -114,9 +116,11 @@ public class ProjectActivity extends AppCompatActivity {
         }
       }
     });
+
+    addNewTask.setOnClickListener(this);
   }
 
-  private void addTasks(final Context applicationContext) {
+  private void addTasks(final ProjectActivity projectActivity) {
     if(progressBar.getVisibility() == View.GONE) {
       taskFailed.setVisibility(View.GONE);
       progressBar.setVisibility(View.VISIBLE);
@@ -132,23 +136,26 @@ public class ProjectActivity extends AppCompatActivity {
             new Response.Listener<JSONObject>() {
               @Override
               public void onResponse(JSONObject response) {
-                Log.d("Response", String.valueOf(response));
                 /** Process Response */
                 try {
                   progressBar.setVisibility(View.GONE);
                   if(response.getBoolean("success")) {
                     JSONArray taskArray = response.getJSONArray("task");
-                    for(int k = 0; k < taskArray.length(); k++) {
-                      JSONObject task = (JSONObject) taskArray.get(k);
-                      taskArrayList.add(new Task(task.getString("title"), task.getString("description"), task.getString("from").split("T")[0], task.getString("to").split("T")[0], task.getString("priority"), task.getString("assigned")));
-                      taskAdapter.notifyDataSetChanged();
+                    if(taskArray.length() == 0) {
+                      noProjectTask.setVisibility(View.VISIBLE);
+                    } else {
+                      for(int k = 0; k < taskArray.length(); k++) {
+                        JSONObject task = (JSONObject) taskArray.get(k);
+                        taskArrayList.add(new Task(task.getString("title"), task.getString("description"), task.getString("from").split("T")[0], task.getString("to").split("T")[0], task.getString("priority"), task.getString("assigned")));
+                        taskAdapter.notifyDataSetChanged();
+                      }
                     }
                   } else {
                     taskFailed.setVisibility(View.VISIBLE);
                     retryTaskButton.setOnClickListener(new View.OnClickListener() {
                       @Override
                       public void onClick(View view) {
-                        addTasks(applicationContext);
+                        addTasks(projectActivity);
                       }
                     });
                   }
@@ -165,20 +172,20 @@ public class ProjectActivity extends AppCompatActivity {
                 retryTaskButton.setOnClickListener(new View.OnClickListener() {
                   @Override
                   public void onClick(View view) {
-                    addTasks(applicationContext);
+                    addTasks(projectActivity);
                   }
                 });
                 /** Process Error */
                 if (error instanceof TimeoutError || error instanceof NoConnectionError) {
-                  Toast.makeText(applicationContext, "Failed to connect to server", Toast.LENGTH_SHORT).show();
+                  Toast.makeText(projectActivity, "Failed to connect to server", Toast.LENGTH_SHORT).show();
                 } else if (error instanceof AuthFailureError) {
-                  Toast.makeText(applicationContext, "Failed to Authenticate", Toast.LENGTH_SHORT).show();
+                  Toast.makeText(projectActivity, "Failed to Authenticate", Toast.LENGTH_SHORT).show();
                 } else if (error instanceof ServerError) {
-                  Toast.makeText(applicationContext, "Server Error", Toast.LENGTH_SHORT).show();
+                  Toast.makeText(projectActivity, "Server Error", Toast.LENGTH_SHORT).show();
                 } else if (error instanceof NetworkError) {
-                  Toast.makeText(applicationContext, "Network Error", Toast.LENGTH_SHORT).show();
+                  Toast.makeText(projectActivity, "Network Error", Toast.LENGTH_SHORT).show();
                 } else if (error instanceof ParseError) {
-                  Toast.makeText(applicationContext, "Failed to process data", Toast.LENGTH_SHORT).show();
+                  Toast.makeText(projectActivity, "Failed to process data", Toast.LENGTH_SHORT).show();
                 }
               }
             }
@@ -192,7 +199,112 @@ public class ProjectActivity extends AppCompatActivity {
       }
     };
     /** Add to queue */
-    MySingleton.getInstance(applicationContext).addToRequestQueue(jsonObjectRequest);
+    MySingleton.getInstance(projectActivity).addToRequestQueue(jsonObjectRequest);
   }
 
+  @Override
+  public void onClick(View view) {
+    if(view.getId() == R.id.addNewTask) {
+      openDialog();
+    }
+  }
+
+  private void openDialog() {
+    final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+    dialogBuilder.setTitle("Add Task");
+    LayoutInflater layoutInflater = this.getLayoutInflater();
+    final View dialogView = layoutInflater.inflate(R.layout.add_task_form, null);
+    dialogBuilder.setView(dialogView);
+    dialogBuilder.setPositiveButton("Create", new DialogInterface.OnClickListener() {
+      @Override
+      public void onClick(DialogInterface dialogInterface, int i) {
+
+        /** Request For Data */
+        /** Find View*/
+        alertTaskName = dialogView.findViewById(R.id.alertTaskName);
+        alertTaskDescription = dialogView.findViewById(R.id.alertTaskDescription);
+        alertTaskAssign = dialogView.findViewById(R.id.alertTaskAssign);
+        alertTaskFromDate = dialogView.findViewById(R.id.alertTaskFromDate);
+        alertTaskToDate = dialogView.findViewById(R.id.alertTaskToDate);
+        alertTaskPriority = dialogView.findViewById(R.id.alertTaskPriority);
+        /** Set data */
+        alerttaskname = alertTaskName.getText().toString();
+        alerttaskdescription = alertTaskDescription.getText().toString();
+        alerttaskassign = alertTaskAssign.getText().toString();
+        alerttaskfromdate = alertTaskFromDate.getText().toString();
+        alerttasktodate = alertTaskToDate.getText().toString();
+        alerttaskpriority = alertTaskPriority.getText().toString();
+
+        /** Add New Project */
+        Map<String, String> params = new HashMap<>();
+        /** params.put() */
+        params.put("projectId", projectId);
+        params.put("title", alerttaskname);
+        params.put("description", alerttaskdescription);
+        params.put("from", alerttaskfromdate);
+        params.put("to", alerttasktodate);
+        params.put("assigned", alerttaskassign);
+        params.put("priority", alerttaskpriority);
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                Request.Method.POST,
+                ADDTASK,
+                new JSONObject(params),
+                new Response.Listener<JSONObject>() {
+                  @Override
+                  public void onResponse(JSONObject response) {
+                    /** Process Response */
+                    try {
+                      if (response.getBoolean("success")) {
+                        Toast.makeText(getApplicationContext(), "Successfully added task", Toast.LENGTH_SHORT).show();
+                        JSONObject task = response.getJSONObject("task");
+                        taskArrayList.add(new Task(task.getString("title"), task.getString("description"), task.getString("from").split("T")[0], task.getString("to").split("T")[0], task.getString("priority"), task.getString("assigned")));
+                        taskAdapter.notifyDataSetChanged();
+                      } else {
+                        Toast.makeText(getApplicationContext(), "Failed to add task", Toast.LENGTH_SHORT).show();
+                      }
+                    } catch (JSONException e) {
+                      e.printStackTrace();
+                    }
+                  }
+                },
+                new Response.ErrorListener() {
+                  @Override
+                  public void onErrorResponse(VolleyError error) {
+                    /** Process Error */
+                    if (error instanceof TimeoutError || error instanceof NoConnectionError) {
+                      Toast.makeText(getApplicationContext(), "Failed to connect to server", Toast.LENGTH_SHORT).show();
+                    } else if (error instanceof AuthFailureError) {
+                      Toast.makeText(getApplicationContext(), "Failed to Authenticate", Toast.LENGTH_SHORT).show();
+                    } else if (error instanceof ServerError) {
+                      Toast.makeText(getApplicationContext(), "Server Error", Toast.LENGTH_SHORT).show();
+                    } else if (error instanceof NetworkError) {
+                      Toast.makeText(getApplicationContext(), "Network Error", Toast.LENGTH_SHORT).show();
+                    } else if (error instanceof ParseError) {
+                      Toast.makeText(getApplicationContext(), "Failed to process data", Toast.LENGTH_SHORT).show();
+                    }
+                  }
+                }
+        ) {
+          @Override
+          public Map<String, String> getHeaders() {
+            HashMap<String, String> headers = new HashMap<>();
+            headers.put("Content-Type", "application/json; charset=utf-8");
+            headers.put("Authorization", sharedPreferences.getString("token", ""));
+            return headers;
+          }
+        };
+        /** Add to queue */
+        MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsonObjectRequest);
+      }
+    });
+    dialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+      @Override
+      public void onClick(DialogInterface dialogInterface, int i) {
+        dialogInterface.cancel();
+      }
+    });
+    AlertDialog alertDialog = dialogBuilder.create();
+    alertDialog.show();
+  }
 }
